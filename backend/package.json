@@ -1,0 +1,57 @@
+{
+  "name": "bedayia-school-backend",
+  "version": "1.0.0",
+  "description": "Bedayia School Backend API with Next.js 15, Bun and PostgreSQL",
+  "main": "server.js",
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build",
+    "start": "next start -p 3001",
+    "lint": "next lint",
+    "db:migrate": "bun run src/lib/db/migrate.ts",
+    "db:seed": "bun run src/lib/db/seed.ts"
+  },
+  "dependencies": {
+    "next": "^15.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "pg": "^8.11.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.0",
+    "qrcode": "^1.5.3",
+    "date-fns": "^2.30.0",
+    "uuid": "^9.0.0",
+    "xlsx": "^0.18.5",
+    "nodemailer": "^6.9.0",
+    "@headlessui/react": "^1.7.17",
+    "@heroicons/react": "^2.0.18",
+    "react-hook-form": "^7.48.2",
+    "react-hot-toast": "^2.4.1",
+    "tailwindcss": "^3.3.6",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@types/pg": "^8.10.0",
+    "@types/bcryptjs": "^2.4.0",
+    "@types/jsonwebtoken": "^9.0.0",
+    "@types/qrcode": "^1.5.0",
+    "@types/uuid": "^9.0.0",
+    "@types/nodemailer": "^6.4.0",
+    "typescript": "^5.0.0",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "^15.0.0"
+  },
+  "keywords": [
+    "next.js",
+    "bun",
+    "postgresql",
+    "api",
+    "school-management"
+  ],
+  "author": "Mohammed Ahmed",
+  "license": "MIT"
+}

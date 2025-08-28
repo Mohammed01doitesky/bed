@@ -1,0 +1,53 @@
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: bedayia_postgres
+    environment:
+      POSTGRES_DB: bedayia_school
+      POSTGRES_USER: bedayia_user
+      POSTGRES_PASSWORD: bedayia_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/database/init:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    networks:
+      - bedayia_network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: bedayia_backend
+    environment:
+      - DATABASE_URL=postgresql://bedayia_user:bedayia_password@postgres:5432/bedayia_school
+      - JWT_SECRET=your-super-secret-jwt-key-change-in-production
+      - NODE_ENV=development
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      - postgres
+    networks:
+      - bedayia_network
+    command: bun run dev
+
+  adminer:
+    image: adminer
+    container_name: bedayia_adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - bedayia_network
+
+volumes:
+  postgres_data:
+
+networks:
+  bedayia_network:
+    driver: bridge
