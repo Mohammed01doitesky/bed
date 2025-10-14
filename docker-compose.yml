@@ -16,24 +16,18 @@ services:
       - bedayia_network
 
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: mohammed112233/personalwork:bedayaschool-backend
     container_name: bedayia_backend
     environment:
-      - DATABASE_URL=postgresql://bedayia_user:bedayia_password@postgres:5432/bedayia_school
+      - DATABASE_URL=postgresql://bedayia_user:bedayia_password@postgres:5432/bedayia_school?sslmode=disable
       - JWT_SECRET=your-super-secret-jwt-key-change-in-production
-      - NODE_ENV=development
+      - NODE_ENV=production
     ports:
-      - "3001:3001"
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
+      - "3000:3000"
     depends_on:
       - postgres
     networks:
       - bedayia_network
-    command: bun run dev
 
   adminer:
     image: adminer
