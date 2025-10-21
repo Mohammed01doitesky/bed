@@ -202,8 +202,10 @@ export default function UsersManagementPage() {
                             </span>
                           )}
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            user.role === 'admin' 
-                              ? 'bg-purple-100 text-purple-800' 
+                            user.role === 'admin'
+                              ? 'bg-purple-100 text-purple-800'
+                              : user.role === 'manager'
+                              ? 'bg-blue-100 text-blue-800'
                               : 'bg-gray-100 text-gray-800'
                           }`}>
                             {user.role}
@@ -277,7 +279,7 @@ function CreateUserModal({
     username: '',
     email: '',
     password: '',
-    role: 'admin'
+    role: 'manager'
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -306,7 +308,7 @@ function CreateUserModal({
                 placeholder="Enter username"
               />
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700">Email *</label>
               <input
@@ -318,7 +320,7 @@ function CreateUserModal({
                 placeholder="Enter email address"
               />
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700">Password *</label>
               <input
@@ -330,7 +332,7 @@ function CreateUserModal({
                 placeholder="Enter password"
               />
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700">Role</label>
               <select
@@ -339,6 +341,7 @@ function CreateUserModal({
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2 border"
               >
                 <option value="admin">Admin</option>
+                <option value="manager">Manager</option>
                 <option value="user">User</option>
               </select>
             </div>
@@ -449,10 +452,11 @@ function EditUserModal({
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2 border"
               >
                 <option value="admin">Admin</option>
+                <option value="manager">Manager</option>
                 <option value="user">User</option>
               </select>
             </div>
-            
+
             <div className="flex justify-end space-x-3 pt-4">
               <button
                 type="button"

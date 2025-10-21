@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F8F8FF">
+
+    <!-- Blue Header -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:background="#7C5CFA">
+
+        <TextView
+            android:id="@+id/invitees_header_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Invitees List"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="36dp" />
+
+        <TextView
+            android:id="@+id/invitees_header_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Check and Update Attendance"
+            android:textColor="#E0E0E0"
+            android:textSize="14sp"
+            android:layout_below="@id/invitees_header_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp" />
+    </RelativeLayout>
+
+    <!-- Main Invitee Card -->
+    <LinearLayout
+        android:id="@+id/main_invitee_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/invitee_card_bg"
+        android:layout_margin="16dp"
+        android:padding="16dp"
+        android:visibility="gone">
+
+
+        <TextView
+            android:id="@+id/main_invitee_seats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#7C5CFA"
+            android:layout_marginBottom="6dp" />
+
+        <TextView
+            android:id="@+id/main_invitee_qrcode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="14sp"
+            android:textColor="#222222" />
+    </LinearLayout>
+
+    <!-- List of Invitees -->
+    <ListView
+        android:id="@+id/invitees_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="12dp"
+        android:padding="16dp" />
+
+    <!-- Submit Button -->
+    <Button
+        android:id="@+id/submit_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Submit Attendance"
+        android:textSize="16sp"
+        android:padding="16dp"
+        android:layout_margin="16dp"
+        android:background="@drawable/rounded_button_bg"
+        android:textColor="#FFFFFF"
+        android:stateListAnimator="@null" />
+
+</LinearLayout> 

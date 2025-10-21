@@ -6,7 +6,7 @@ import { useRouter, usePathname } from 'next/navigation';
 interface User {
   id: number;
   username: string;
-  role: string;
+  role: 'admin' | 'manager' | 'user';
 }
 
 interface AuthContextType {
@@ -15,6 +15,7 @@ interface AuthContextType {
   logout: () => void;
   loading: boolean;
   isAuthenticated: boolean;
+  hasWebAccess: boolean;
   checkTokenValidity: () => Promise<boolean>;
   apiCall: (url: string, options?: RequestInit) => Promise<Response>;
 }
@@ -28,6 +29,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   const isAuthenticated = !!user;
+  const hasWebAccess = user ? (user.role === 'admin' || user.role === 'manager') : false;
 
   useEffect(() => {
     // Check for stored auth data on mount
@@ -52,17 +54,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Redirect logic
     if (!loading) {
       const isLoginPage = pathname === '/login';
-      const isPublicPage = pathname === '/' || pathname === '/login';
+      const isAccessDeniedPage = pathname === '/access-denied';
+      const isPublicPage = pathname === '/' || pathname === '/login' || pathname === '/access-denied';
 
       if (!isAuthenticated && !isPublicPage) {
         router.push('/login');
       } else if (isAuthenticated && isLoginPage) {
+        if (hasWebAccess) {
+          router.push('/admin');
+        } else {
+          // User doesn't have web access, redirect to access denied page
+          router.push('/access-denied');
+        }
+      } else if (isAuthenticated && !hasWebAccess && !isPublicPage) {
+        // User is authenticated but doesn't have web access to non-public pages
+        router.push('/access-denied');
+      } else if (isAuthenticated && hasWebAccess && isAccessDeniedPage) {
+        // User has web access but is on access denied page, redirect to admin
         router.push('/admin');
       }
     }
-  }, [isAuthenticated, loading, pathname, router]);
+  }, [isAuthenticated, hasWebAccess, loading, pathname, router]);
 
   const login = (token: string, userData: User) => {
+    // Check if user has web access before allowing login
+    const userHasWebAccess = userData.role === 'admin' || userData.role === 'manager';
+
+    if (!userHasWebAccess) {
+      // Redirect to access denied page for users without web access
+      router.push('/access-denied');
+      return;
+    }
+
     localStorage.setItem('auth_token', token);
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
@@ -140,6 +163,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     logout,
     loading,
     isAuthenticated,
+    hasWebAccess,
     checkTokenValidity,
     apiCall,
   };
@@ -160,7 +184,7 @@ export function withAuth<T extends Record<string, any>>(
   WrappedComponent: React.ComponentType<T>
 ) {
   const AuthenticatedComponent = (props: T) => {
-    const { isAuthenticated, loading } = useAuth();
+    const { isAuthenticated, hasWebAccess, loading } = useAuth();
 
     if (loading) {
       return (
@@ -170,7 +194,7 @@ export function withAuth<T extends Record<string, any>>(
       );
     }
 
-    if (!isAuthenticated) {
+    if (!isAuthenticated || !hasWebAccess) {
       return null; // AuthContext will handle redirect
     }
 

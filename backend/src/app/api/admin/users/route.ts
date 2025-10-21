@@ -30,7 +30,15 @@ export const GET = requireRole('admin')(async (request: NextRequest) => {
 export const POST = requireRole('admin')(async (request: NextRequest) => {
   try {
     const body = await request.json();
-    const { username, email, password, role = 'admin' } = body;
+    const { username, email, password, role = 'manager' } = body;
+
+    // Validate role
+    if (!['admin', 'manager', 'user'].includes(role)) {
+      return NextResponse.json(
+        { error: "Invalid role. Must be 'admin', 'manager', or 'user'" },
+        { status: 400, headers: corsHeaders() }
+      );
+    }
 
     if (!username || !email || !password) {
       return NextResponse.json(

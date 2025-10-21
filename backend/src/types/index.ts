@@ -3,8 +3,18 @@ export interface User {
   username: string;
   email: string;
   password_hash: string;
+  role: 'admin' | 'manager' | 'user';
   created_at: Date;
   updated_at: Date;
+}
+
+export interface UserRole {
+  id: number;
+  role_name: string;
+  description: string;
+  can_access_web: boolean;
+  can_access_api: boolean;
+  created_at: Date;
 }
 
 export interface ApiKey {

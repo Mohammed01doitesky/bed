@@ -26,7 +26,7 @@ export interface UpdateUserData {
 
 export class UserService {
   static async createUser(userData: CreateUserData): Promise<User> {
-    const { username, email, password, role = 'admin' } = userData;
+    const { username, email, password, role = 'manager' } = userData;
 
     // Hash password
     const saltRounds = 10;

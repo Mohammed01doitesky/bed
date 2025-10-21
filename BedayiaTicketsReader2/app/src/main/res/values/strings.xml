@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Bedayia Tickets Reader</string>
+    <string name="invitee_name_holder">Name : </string>
+    <string name="invitee_qrcode_holder">QRCode :> </string>
+</resources>

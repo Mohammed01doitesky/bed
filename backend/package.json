@@ -4,9 +4,9 @@
   "description": "Bedayia School Backend API with Next.js 15, Bun and PostgreSQL",
   "main": "server.js",
   "scripts": {
-    "dev": "next dev -p 3001",
+    "dev": "next dev -p 3000",
     "build": "next build",
-    "start": "next start -p 3001",
+    "start": "next start -p 3000",
     "lint": "next lint",
     "db:migrate": "bun run src/lib/db/migrate.ts",
     "db:seed": "bun run src/lib/db/seed.ts"

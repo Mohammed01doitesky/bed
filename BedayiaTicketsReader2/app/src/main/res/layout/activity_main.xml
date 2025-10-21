@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8F8FF">
+
+    <!-- Purple Header -->
+    <View
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="#7C5CFA" />
+
+    <TextView
+        android:id="@+id/header_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="QR-Scanner"
+        android:textColor="#FFFFFF"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:layout_alignTop="@id/header"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="28dp" />
+
+    <!-- Logout Button -->
+    <ImageButton
+        android:id="@+id/logout_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_logout"
+        android:background="@drawable/logout_button_bg"
+        android:layout_alignTop="@id/header"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="Logout" />
+
+    <!-- QR Scanner Card -->
+    <LinearLayout
+        android:id="@+id/qr_card"
+        android:layout_width="320dp"
+        android:layout_height="320dp"
+        android:orientation="vertical"
+        android:background="@drawable/qr_card_bg"
+        android:layout_centerInParent="true"
+        android:gravity="center">
+
+        <!-- QR Border -->
+        <ImageView
+            android:id="@+id/qr_border"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            android:src="@drawable/qr_border"
+            android:scaleType="fitXY"
+            android:layout_gravity="center" />
+
+        <!-- QR Icon (placeholder for live camera) -->
+        <ImageView
+            android:id="@+id/qr_icon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_qr_placeholder"
+            android:layout_gravity="center"
+            android:layout_marginTop="-160dp"
+            android:background="@android:color/transparent" />
+    </LinearLayout>
+
+    <!-- Floating Green QR Button -->
+    <ImageButton
+        android:id="@+id/scan_button"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/ic_qr_white"
+        android:background="@drawable/qr_fab_bg"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="36dp"
+        android:elevation="8dp"
+        android:contentDescription="Scan QR Code" />
+
+</RelativeLayout> 

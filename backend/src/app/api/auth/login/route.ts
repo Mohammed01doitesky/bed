@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { corsHeaders } from '@/lib/middleware';
 import { query } from '@/lib/db/connection';
+import { AuthService } from '@/lib/auth';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
@@ -37,6 +38,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: "Invalid credentials" },
         { status: 401, headers: corsHeaders() }
+      );
+    }
+
+    // Check if user has web access permission
+    const hasWebAccess = await AuthService.hasPermission(user, 'web');
+    if (!hasWebAccess) {
+      return NextResponse.json(
+        { error: "Access denied. Your account type does not have web access permissions." },
+        { status: 403, headers: corsHeaders() }
       );
     }
 

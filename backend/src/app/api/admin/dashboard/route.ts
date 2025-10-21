@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query } from '@/lib/db/connection';
 import { corsHeaders } from '@/lib/middleware';
+import { withRoleAuth } from '@/lib/middleware/roleAuth';
+import { User } from '@/types';
 
-export async function GET(request: NextRequest) {
+async function handleDashboard(request: NextRequest, context: any, user: User): Promise<NextResponse> {
   try {
     // Get total events count
     const eventsResult = await query('SELECT COUNT(*) as count FROM bydaya_events WHERE active = true');
@@ -14,14 +16,14 @@ export async function GET(request: NextRequest) {
 
     // Get attendance rate
     const attendanceResult = await query(`
-      SELECT 
+      SELECT
         COUNT(*) FILTER (WHERE invitees_attendance = true) as attended,
         COUNT(*) as total
-      FROM bydaya_event_invitees 
+      FROM bydaya_event_invitees
       WHERE active = true
     `);
     const attendanceData = attendanceResult.rows[0];
-    const attendanceRate = attendanceData.total > 0 
+    const attendanceRate = attendanceData.total > 0
       ? Math.round((attendanceData.attended / attendanceData.total) * 100)
       : 0;
 
@@ -38,7 +40,11 @@ export async function GET(request: NextRequest) {
       totalEvents,
       totalInvitees,
       attendanceRate,
-      recentEvents: recentEventsResult.rows
+      recentEvents: recentEventsResult.rows,
+      user: {
+        username: user.username,
+        role: user.role
+      }
     };
 
     return NextResponse.json(dashboardData, {
@@ -50,10 +56,13 @@ export async function GET(request: NextRequest) {
     console.error('Dashboard API error:', error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { 
+      {
         status: 500,
         headers: corsHeaders()
       }
     );
   }
 }
+
+// Export with role-based authentication - requires web access
+export const GET = withRoleAuth(handleDashboard, 'web');

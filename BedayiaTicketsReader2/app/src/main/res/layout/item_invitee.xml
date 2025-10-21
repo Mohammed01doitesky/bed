@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:background="@drawable/invitee_card_bg"
+    android:padding="12dp"
+    android:gravity="center_vertical">
+
+    <!-- Left Icon -->
+    <ImageView
+        android:id="@+id/invitee_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_person_blue"
+        android:background="@android:color/transparent"
+        android:contentDescription="Invitee Icon"
+        android:layout_marginEnd="12dp" />
+
+    <!-- Main Content -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/invitee_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Invitee Name"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#222222" />
+
+        <TextView
+            android:id="@+id/attendance_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Attendance Time"
+            android:textSize="12sp"
+            android:textColor="#888888"
+            android:layout_marginTop="2dp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <!-- Attendance Checkbox -->
+    <CheckBox
+        android:id="@+id/attendance_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:buttonTint="#7C5CFA"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
+
+    <!-- Right Arrow -->
+    <ImageView
+        android:id="@+id/invitee_arrow"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_arrow_right"
+        android:background="@android:color/transparent"
+        android:contentDescription="Details Arrow" />
+
+</LinearLayout> 

@@ -1,11 +1,22 @@
 -- Create database schema for Bedayia School
 
+-- Create user roles table
+CREATE TABLE IF NOT EXISTS user_roles (
+    id SERIAL PRIMARY KEY,
+    role_name VARCHAR(50) UNIQUE NOT NULL,
+    description TEXT,
+    can_access_web BOOLEAN DEFAULT true,
+    can_access_api BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Users table for authentication
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(255) UNIQUE NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(50) DEFAULT 'admin',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -59,6 +70,7 @@ CREATE TABLE IF NOT EXISTS bydaya_event_invitees (
     invitees_attendance_time TIMESTAMP,
     main_invitee BOOLEAN DEFAULT false,
     mail_send BOOLEAN DEFAULT false,
+    mail_sent_at TIMESTAMP,
     active BOOLEAN DEFAULT true,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -72,7 +84,19 @@ CREATE INDEX IF NOT EXISTS idx_event_invitees_event_id ON bydaya_event_invitees(
 CREATE INDEX IF NOT EXISTS idx_event_invitees_qrcode ON bydaya_event_invitees(invitees_qrcode_text);
 CREATE INDEX IF NOT EXISTS idx_event_invitees_student_item ON bydaya_event_invitees(student_item_id);
 
+-- Insert role definitions
+INSERT INTO user_roles (role_name, description, can_access_web, can_access_api) VALUES
+('admin', 'Administrator with full access to web and API', true, true),
+('manager', 'Manager with API access and web access, same permissions as user type', true, true),
+('user', 'User with API access only, no web access', false, true)
+ON CONFLICT (role_name) DO UPDATE SET
+    description = EXCLUDED.description,
+    can_access_web = EXCLUDED.can_access_web,
+    can_access_api = EXCLUDED.can_access_api;
+
 -- Insert default admin user (password: admin123)
-INSERT INTO users (username, email, password_hash) 
-VALUES ('admin', 'admin@bedayia.school', '$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi')
-ON CONFLICT (username) DO NOTHING;
+INSERT INTO users (username, email, password_hash, role)
+VALUES ('admin', 'admin@bedayia.school', '$2a$10$adtD3nq.AhUbKxv9cRaxbOxMMJhOJslvvX1UU3XZQd4OD3sPWupju', 'admin')
+ON CONFLICT (username) DO UPDATE SET
+    password_hash = EXCLUDED.password_hash,
+    role = EXCLUDED.role;

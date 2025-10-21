@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import { query } from './db/connection';
-import { User, ApiKey } from '@/types';
+import { User, ApiKey, UserRole } from '@/types';
 
 export class AuthService {
   private static JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-key';
@@ -104,14 +104,61 @@ export class AuthService {
     return bcrypt.hash(password, 10);
   }
 
-  static async createUser(username: string, email: string, password: string): Promise<User> {
+  static async createUser(username: string, email: string, password: string, role: 'admin' | 'manager' | 'user' = 'user'): Promise<User> {
     const passwordHash = await this.hashPassword(password);
-    
+
     const result = await query(
-      'INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3) RETURNING *',
-      [username, email, passwordHash]
+      'INSERT INTO users (username, email, password_hash, role) VALUES ($1, $2, $3, $4) RETURNING *',
+      [username, email, passwordHash, role]
     );
 
     return result.rows[0];
+  }
+
+  static async getUserRole(roleId: string): Promise<UserRole | null> {
+    try {
+      const result = await query(
+        'SELECT * FROM user_roles WHERE role_name = $1',
+        [roleId]
+      );
+
+      if (result.rows.length === 0) {
+        return null;
+      }
+
+      return result.rows[0];
+    } catch (error) {
+      console.error('Get user role error:', error);
+      return null;
+    }
+  }
+
+  static async canAccessWeb(user: User): Promise<boolean> {
+    try {
+      const roleInfo = await this.getUserRole(user.role);
+      return roleInfo?.can_access_web || false;
+    } catch (error) {
+      console.error('Check web access error:', error);
+      return false;
+    }
+  }
+
+  static async canAccessApi(user: User): Promise<boolean> {
+    try {
+      const roleInfo = await this.getUserRole(user.role);
+      return roleInfo?.can_access_api || false;
+    } catch (error) {
+      console.error('Check API access error:', error);
+      return false;
+    }
+  }
+
+  static async hasPermission(user: User, permission: 'web' | 'api'): Promise<boolean> {
+    if (permission === 'web') {
+      return this.canAccessWeb(user);
+    } else if (permission === 'api') {
+      return this.canAccessApi(user);
+    }
+    return false;
   }
 }

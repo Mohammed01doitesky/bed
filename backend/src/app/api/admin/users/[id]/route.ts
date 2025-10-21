@@ -66,6 +66,14 @@ export const PUT = requireRole('admin')(async (request: NextRequest, { params }:
       );
     }
 
+    // Validate role if provided
+    if (role && !['admin', 'manager', 'user'].includes(role)) {
+      return NextResponse.json(
+        { error: "Invalid role. Must be 'admin', 'manager', or 'user'" },
+        { status: 400, headers: corsHeaders() }
+      );
+    }
+
     // Check if username is taken by another user
     const existingUser = await UserService.getUserByUsername(username);
     if (existingUser && existingUser.id !== userId) {
