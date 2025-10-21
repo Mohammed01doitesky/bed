@@ -16,7 +16,9 @@ services:
       - bedayia_network
 
   backend:
-    image: mohammed112233/personalwork:bedayaschool-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.bun
     container_name: bedayia_backend
     environment:
       - DATABASE_URL=postgresql://bedayia_user:bedayia_password@postgres:5432/bedayia_school?sslmode=disable
