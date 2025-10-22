@@ -115,8 +115,9 @@ export class EmailService {
         try {
           // Generate QR code from text
           let qrCodeBase64 = '';
+          let qrCodeBuffer: Buffer | null = null;
           if (invitee.invitees_qrcode_text) {
-            const qrCodeBuffer = await QRCode.toBuffer(invitee.invitees_qrcode_text, {
+            qrCodeBuffer = await QRCode.toBuffer(invitee.invitees_qrcode_text, {
               width: 256,
               margin: 2,
               color: {
@@ -169,7 +170,12 @@ export class EmailService {
               to: recipients[0],
               cc: ccEmails.join(', '),
               subject: eventName,
-              html: emailHtml
+              html: emailHtml,
+              attachments: qrCodeBuffer ? [{
+                filename: 'qr-code.png',
+                content: qrCodeBuffer,
+                contentType: 'image/png'
+              }] : []
             };
 
             const emailSent = await this.sendEmail(emailData);

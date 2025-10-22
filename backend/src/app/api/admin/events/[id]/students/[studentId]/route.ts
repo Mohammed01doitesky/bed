@@ -100,7 +100,7 @@ export async function PUT(
       
       if (inviteeNames.length > 0) {
         // Use the main student's QR code for all family members
-        const mainQrCodeText = `EventID : ${eventId},ID : ${studentId}, Name : ${student_name}`;
+        const mainQrCodeText = `${student_id}${student_name}`;
         
         for (const inviteeName of inviteeNames) {
           await query(`

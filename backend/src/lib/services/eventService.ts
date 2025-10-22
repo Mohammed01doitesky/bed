@@ -129,7 +129,7 @@ export class EventService {
       const eventItem = itemResult.rows[0];
 
       // Generate QR code text
-      const qrCodeText = `EventID : ${itemData.event_id},ID : ${itemData.student_id}, Name : ${itemData.student_name}`;
+      const qrCodeText = `${itemData.student_id}${itemData.student_name}`;
 
       // Create main invitee
       await query(`
