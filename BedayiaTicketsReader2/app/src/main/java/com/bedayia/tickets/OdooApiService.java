@@ -22,7 +22,7 @@ import java.util.List;
 
 public class OdooApiService {
     private static final String TAG = "OdooApiService";
-    private static final String BASE_URL = "http://192.168.1.2:3000/api/v1/";
+    private static final String BASE_URL = "http://192.168.100.17:3000/api/v1/";
     private static final String PREFS_NAME = "LoginPrefs";
     private static final String API_KEY = "api_key";
     

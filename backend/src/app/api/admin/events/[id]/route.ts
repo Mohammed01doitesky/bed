@@ -113,32 +113,35 @@ export async function DELETE(
     const { id } = await params;
     const eventId = parseInt(id);
 
-    // Soft delete - set active to false
-    const result = await query(`
-      UPDATE bydaya_events 
-      SET active = false, updated_at = NOW()
+    // Check if event exists
+    const checkResult = await query(`
+      SELECT id FROM bydaya_events
       WHERE id = $1 AND active = true
-      RETURNING id
     `, [eventId]);
 
-    if (result.rows.length === 0) {
+    if (checkResult.rows.length === 0) {
       return NextResponse.json(
         { error: "Event not found" },
         { status: 404, headers: corsHeaders() }
       );
     }
 
-    // Also soft delete related records
+    // Delete related invitees first (due to foreign key constraints)
     await query(`
-      UPDATE bydaya_event_items 
-      SET active = false, updated_at = NOW()
+      DELETE FROM bydaya_event_invitees
       WHERE event_id = $1
     `, [eventId]);
 
+    // Delete related event items
     await query(`
-      UPDATE bydaya_event_invitees 
-      SET active = false, updated_at = NOW()
+      DELETE FROM bydaya_event_items
       WHERE event_id = $1
+    `, [eventId]);
+
+    // Finally delete the event itself
+    await query(`
+      DELETE FROM bydaya_events
+      WHERE id = $1
     `, [eventId]);
 
     return NextResponse.json({
@@ -153,7 +156,7 @@ export async function DELETE(
     console.error('Delete event error:', error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { 
+      {
         status: 500,
         headers: corsHeaders()
       }
